@@ -14,14 +14,14 @@ const Homepage = () => {
 
     let numArr = []
 
-    for (let index = 1; index <= 32; index++) {
+    for (let index = 1; index <= noOfTeeth; index++) {
         numArr.push(index)
     }
 
     const startGame = () => {
-        if (lose) { window.location.reload() }
+        if (lose || win || game) { window.location.reload() }
         setgame(true)
-        let num = Math.floor(Math.random() * 32) + 1;
+        let num = Math.floor(Math.random() * noOfTeeth) + 1;
         setloserNumber(num)
         console.log("win num", num)
     }
@@ -39,9 +39,8 @@ const Homepage = () => {
     }
 
     useEffect(() => {
-        if (winNo.length == 31) {
-            console.log("first won")
-            setwin(true)
+        if (game && winNo.length == noOfTeeth-1) {
+             setwin(true)
             setgame(false)
         }
     }, [winNo])
@@ -51,11 +50,9 @@ const Homepage = () => {
         <>
             <div className='flex flex-col justify-center items-center h-[100vh]'>
                 <h1 className='text-green-800 text-4xl p-4 m-4'>CracoTeeth</h1>
-
-                <h2>winning teeth - {loserNumber}</h2>
-                <Setting noOfTeeth={noOfTeeth} setnoOfTeeth={setnoOfTeeth}/>
+                {!game && (lose || !win) && <Setting noOfTeeth={noOfTeeth} setnoOfTeeth={setnoOfTeeth}/>}
                 {game && <CracoTeeth ref={ref} numArr={numArr} clickHandler={clickHandler} lose={lose}/>}
-                <button className='p-3 bg-green-300 m-4 rounded-xl' onClick={startGame}>{game ? "reset" : "start"}</button>
+                <button className='p-3 bg-green-300 m-4 rounded-xl' onClick={startGame}>{game || win ? "reset" : "start"}</button>
                 {lose && <h1 className='text-green-800 text-4xl p-4 m-4'>lost</h1>}
                 {win && <h1 className='text-green-800 text-4xl p-4 m-4'>winning</h1>}
             </div>
